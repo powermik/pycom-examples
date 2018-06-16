@@ -2,6 +2,7 @@ import socket
 import time
 import binascii
 import pycom
+import machine
 from network import LoRa
 from CayenneLPP import CayenneLPP
 
@@ -21,18 +22,24 @@ pycom.heartbeat(False)
 
 # Initialize LoRa in LORAWAN mode.
 lora = LoRa(mode=LoRa.LORAWAN)
+lora.nvram_restore()
 
 # create an OTAA authentication parameters
 app_eui = binascii.unhexlify('0101010101010101')
 app_key = binascii.unhexlify('11B0282A189B75B0B4D2D8C7FA38548B')
+
+#how long to sleep after transmitting
+sleep_time=30
 
 print("DevEUI: %s" % (binascii.hexlify(lora.mac())))
 print("AppEUI: %s" % (binascii.hexlify(app_eui)))
 print("AppKey: %s" % (binascii.hexlify(app_key)))
 
 
-# join a network using OTAA (Over the Air Activation)
-lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
+# after waking up from deepsleep and nvram_restore maybe join is already completed some cycles before
+if not lora.has_joined():
+    # join a network using OTAA (Over the Air Activation)
+    lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
 
 # wait until the module has joined the network
 while not lora.has_joined():
@@ -91,4 +98,6 @@ while True:
     data = s.recv(64)
     print('Received data (downlink)', data)
     pycom.rgbled(0x001400)
-    time.sleep(30)
+
+    lora.nvram_save()
+    machine.deepsleep(sleep_time)
