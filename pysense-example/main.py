@@ -85,6 +85,10 @@ while True:
     lpp.add_gps(1, 0, 0, mpAlt.altitude())
     lpp.add_temperature(2, mpAlt.temperature())
 
+    print('\n\n** VCC')
+    print('VCC ', py.read_battery_voltage())
+    lpp.add_analog_input(1,py.read_battery_voltage())
+
     print('Sending data (uplink)...')
     s.send(bytes(lpp.get_buffer()))
     s.setblocking(False)
