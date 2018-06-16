@@ -119,7 +119,7 @@ class CayenneLPP:
         self.buffer.extend(struct.pack('b', val >> 8))
         self.buffer.extend(struct.pack('b', val))                
 
-    def add_gryrometer(self, channel, x, y, z):
+    def add_gyrometer(self, channel, x, y, z):
         vx = math.floor(x * 100)
         vy = math.floor(y * 100)
         vz = math.floor(z * 100)

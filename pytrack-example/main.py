@@ -62,7 +62,7 @@ while True:
     print('Roll', li.roll())
     print('Pitch', li.pitch())
     lpp.add_accelerometer(1, li.acceleration()[0], li.acceleration()[1], li.acceleration()[2])
-    lpp.add_gryrometer(1, li.roll(), li.pitch(), 0)
+    lpp.add_gyrometer(1, li.roll(), li.pitch(), 0)
 
     print('\n\n** GPS (L76GNSS)')
     loc = gnss.coordinates()
